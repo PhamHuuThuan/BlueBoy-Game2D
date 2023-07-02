@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
@@ -27,13 +28,16 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	//FPS
 	int FPS = 60;
+	int drawCount = 0;
 	
 	//SYSTEM
 	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler();
-	Sound sound = new Sound();
+	Sound music = new Sound();
+	Sound se = new Sound();
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
+	public UI ui = new UI(this);
 	Thread gameThread;
 	
 	//ENTITY AND OBJECTS
@@ -94,7 +98,7 @@ public class GamePanel extends JPanel implements Runnable{
 		long lastTime = System.nanoTime();
 		long currentTime;
 		long timer = 0;
-		int drawCount = 0;
+		int drawCountTemp = 0;
 		
 		while (gameThread!=null) {
 			
@@ -109,11 +113,12 @@ public class GamePanel extends JPanel implements Runnable{
 				update();
 				repaint();
 				delta--;
-				drawCount++;
+				drawCountTemp++;
 			}
 			if(timer > 1000000000) {
-				System.out.println("FPS: "+ drawCount);
-				drawCount = 0;
+				drawCount = drawCountTemp;
+				System.out.println("FPS: "+drawCount);
+				drawCountTemp = 0;
 				timer = 0;
 			}
 		}
@@ -142,18 +147,24 @@ public class GamePanel extends JPanel implements Runnable{
 		//PLAYER
 		player.draw(g2);
 
+		//UI
+		ui.draw(g2);
+		
+		//FPS
+		ui.drawFPS(g2, drawCount);
+		
 		g2.dispose();
 	}
 	public void playMusic(int i) {
-		sound.setFile(i);
-		sound.play();
-		sound.loop();
+		music.setFile(i);
+		music.play();
+		music.loop();
 	}
 	public void stopMusic() {
-		sound.stop();
+		music.stop();
 	}
 	public void playSE(int i) {
-		sound.setFile(i);
-		sound.play();
+		se.setFile(i);
+		se.play();
 	}
 }
