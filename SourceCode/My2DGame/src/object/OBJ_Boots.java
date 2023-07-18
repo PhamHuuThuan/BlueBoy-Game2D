@@ -12,7 +12,7 @@ public class OBJ_Boots extends SuperObject{
 		name = "Boots";
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream("/objects/boots.png"));
-			uTool.scaledImage(image, gp.tileSize, gp.tileSize);
+			image = uTool.scaledImage(image, gp.tileSize, gp.tileSize);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

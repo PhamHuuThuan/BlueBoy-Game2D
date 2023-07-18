@@ -12,7 +12,7 @@ public class OBJ_Key extends SuperObject{
 		name = "Key";
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream("/objects/key.png"));
-			uTool.scaledImage(image, gp.tileSize, gp.tileSize);
+			image = uTool.scaledImage(image, gp.tileSize, gp.tileSize);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

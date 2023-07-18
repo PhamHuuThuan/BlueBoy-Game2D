@@ -37,6 +37,10 @@ public class Player extends Entity{
 		worldY = gp.tileSize*21;
 		speed = 4;
 		direction = "down";
+		
+		//PLAYER STATUS
+		maxLife = 6;
+		life = maxLife;
 	}
 	public void getPlayerImage() {
 		up1 = setup("/player/boy_up_1");
@@ -76,6 +80,11 @@ public class Player extends Entity{
 			//CHECK NPC COLLISION
 			int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
 			interactNPC(npcIndex);
+			
+			//CHECK EVENT
+			gp.eHandler.checkEvent();
+			
+			gp.keyH.enterPressed = false;
 			
 			//IF COLLISION IS FALSE, PLAYER CAN MOVE
 			if(collisonOn == false) {
@@ -123,14 +132,13 @@ public class Player extends Entity{
 	}
 	public void interactNPC(int i) {
 		if(i != 999) {
-			System.out.println("You are hitting NPC");
+			if(gp.keyH.enterPressed == true) {
+				gp.gameState = gp.dialogueState;
+				gp.npc[i].speak();
+			}
 		}
 	}
 	public void draw(Graphics2D g2) {
-		
-//		g2.setColor(Color.white);
-//		
-//		g2.fillRect(x, y, gp.tileSize, gp.tileSize);
 		
 		BufferedImage image = null;
 		
