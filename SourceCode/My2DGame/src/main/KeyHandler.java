@@ -88,7 +88,6 @@ public class KeyHandler implements KeyListener{
 				}
 				if(code==KeyEvent.VK_ENTER) {
 					if(gp.ui.commandNum == 0) {
-						System.out.println("Do some fighter specific stuff!");
 						gp.gameState = gp.playState;
 						gp.playMusic(0);
 					}
