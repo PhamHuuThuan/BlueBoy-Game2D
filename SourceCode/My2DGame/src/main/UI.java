@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 
+import entity.Entity;
 import object.OBJ_Heart;
 import object.OBJ_Key;
-import object.SuperObject;
 
 public class UI {
 
@@ -44,7 +44,7 @@ public class UI {
 		}
 		
 		//CREATE HUB OBJECT
-		SuperObject heart = new OBJ_Heart(gp);
+		Entity heart = new OBJ_Heart(gp);
 		heart_Full = heart.image3;
 		heart_Half = heart.image2;
 		heart_Blank = heart.image;
