@@ -105,7 +105,6 @@ public class GamePanel extends JPanel implements Runnable{
 			}
 			if(timer > 1000000000) {
 				drawCount = drawCountTemp;
-				System.out.println("FPS: "+drawCount);
 				drawCountTemp = 0;
 				timer = 0;
 			}
@@ -125,8 +124,14 @@ public class GamePanel extends JPanel implements Runnable{
 			}
 			//MONSTER
 			for(int i = 0; i < monster.length; i++) {
-				if(monster[i]!=null)
-					monster[i].update();
+				if(monster[i]!=null) {
+					if(monster[i].alive == true && monster[i].dying == false) {
+						monster[i].update();
+					}
+					if(monster[i].alive == false) {
+						monster[i] = null;
+					}
+				}
 			}
 		}	
 		else if(gameState == pauseState) {
@@ -186,9 +191,7 @@ public class GamePanel extends JPanel implements Runnable{
 				entityList.get(i).draw(g2);
 			}
 			//EMPTY ENTITES LIST
-			for(int i = 0; i < entityList.size(); i++) {
-				entityList.remove(i);
-			}
+			entityList.clear();
 			
 			//UI
 			ui.draw(g2);
