@@ -40,15 +40,44 @@ public class Entity {
 	public int invincibleCounter = 0;
 	public int actionLockCounter = 0;
 	public int spriteCounter = 0;
+	public int shotAvailableCounter = 0;
 	int dyingCounter = 0;
 	int hpBarCounter = 0;
 	
 	//CHARACTER ATTIBUTES
-	public int type; // 0: player, 1: npc, 2: moster
 	public String name;
 	public int speed;
 	public int maxLife;
 	public int life;
+	public int maxMana;
+	public int mana;
+	public int level;
+	public int strength;
+	public int dexterity;
+	public int attack;
+	public int defense;
+	public int exp;
+	public int nextLevelExp;
+	public int coin;
+	public Entity currentWeapon;
+	public Entity currentShield;
+	public ProjectTile projecttile;
+	
+	//ITEM ATTIBUTES
+	public int attackValue;
+	public int defenseValue;
+	public String description = "";
+	public int useCost;
+	
+	//TYPE
+	public int type; // 0: player, 1: npc, 2: moster
+	public final int type_Player = 0;
+	public final int type_Npc = 1;
+	public final int type_Monster = 2;
+	public final int type_Sword = 3;
+	public final int type_Axe = 4;
+	public final int type_Shield = 5;
+	public final int type_Consumable = 6;
 	
 	public Entity(GamePanel gp) {
 		this.gp = gp;
@@ -81,6 +110,9 @@ public class Entity {
 			break;
 		}
 	}
+	public void use(Entity entity) {
+		
+	}
 	public void update() {
 		setAction();
 		
@@ -91,11 +123,18 @@ public class Entity {
 		gp.cChecker.checkEntity(this, gp.monster);
 		boolean contactPlayer = gp.cChecker.checkPlayer(this);
 		
-		if(this.type == 2 && contactPlayer == true) {
+		if(this.type == type_Monster && contactPlayer == true) {
 			if(gp.player.invincible == false) {
 				//we can give damage;
+				int damage = attack - gp.player.defense;
+				
+				if(damage < 0) {
+					damage = 0;
+				}
 				gp.playSE(6);
-				gp.player.life--;
+				gp.player.life -= damage;
+				if(gp.player.life<0)
+					gp.player.life = 0;
 				gp.player.invincible = true;
 			}
 		}
@@ -230,7 +269,6 @@ public class Entity {
 		}else if(dyingCounter <= i*8) {
 			changeAlpha(g2, 1f);
 		}else{
-			dying = false;
 			alive = false;
 		}
 	}

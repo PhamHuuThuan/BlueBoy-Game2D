@@ -50,6 +50,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public Entity obj[] = new Entity[10];
 	public Entity npc[] = new Entity[10];
 	public Entity monster[] = new Entity[20];
+	public ArrayList<Entity> projecttileList = new ArrayList<>();
 	ArrayList<Entity> entityList = new ArrayList<>();
 	
 	// GAME STATE
@@ -58,6 +59,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int playState = 1;
 	public final int pauseState = 2;
 	public final int dialogueState = 3;
+	public final int characterState = 4;
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -133,6 +135,17 @@ public class GamePanel extends JPanel implements Runnable{
 					}
 				}
 			}
+			//PROJECTTILE
+			for(int i = 0; i < projecttileList.size(); i++) {
+				if(projecttileList.get(i)!=null) {
+					if(projecttileList.get(i).alive == true) {
+						projecttileList.get(i).update();
+					}
+					if(projecttileList.get(i).alive == false) {
+						projecttileList.remove(i);
+					}
+				}
+			}
 		}	
 		else if(gameState == pauseState) {
 			//nothing to do
@@ -174,6 +187,11 @@ public class GamePanel extends JPanel implements Runnable{
 			for(int i = 0; i < monster.length; i++) {
 				if(monster[i]!=null) {
 					entityList.add(monster[i]);
+				}
+			}
+			for(int i = 0; i < projecttileList.size(); i++) {
+				if(projecttileList.get(i)!=null) {
+					entityList.add(projecttileList.get(i));
 				}
 			}
 			//SORT
