@@ -16,6 +16,7 @@ import main.KeyHandler;
 import main.UtilityTool;
 import object.OBJ_Fireball;
 import object.OBJ_Key;
+import object.OBJ_Rock;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
 
@@ -60,6 +61,8 @@ public class Player extends Entity{
 		level = 1;
 		maxLife = 6;
 		life = maxLife;
+		maxMana = 4;
+		mana = maxMana;
 		strength = 1;	//the more strength he has, the more damage he gives.
 		dexterity = 1;	//the more dexterity he has, the less defense he receives.
 		exp = 0;
@@ -200,9 +203,12 @@ public class Player extends Entity{
 			}
 		}
 		
-		if(keyH.shotKeyPress == true && projecttile.alive == false && shotAvailableCounter == 60) {
+		if(keyH.shotKeyPress == true && projecttile.alive == false && shotAvailableCounter == 60 && projecttile.haveResource(this)==true) {
 			//SET DEFAULT COORDINATES, DIRECTRION AND USER
 			projecttile.set(worldX, worldY, direction, true, this);
+			
+			//SUBTRACT THE COST (MANA, AMMO ETC)
+			projecttile.subtractResource(this);
 			
 			//ADD IT TO THE LIST
 			gp.projecttileList.add(projecttile);
