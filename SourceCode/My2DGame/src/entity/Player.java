@@ -229,6 +229,9 @@ public class Player extends Entity{
 		if(shotAvailableCounter < 60) {
 			shotAvailableCounter++;
 		}
+		if(life>maxLife) {
+			life = maxLife;
+		}
 	}
 	public void attacking() {
 		spriteCounter++;
@@ -276,16 +279,25 @@ public class Player extends Entity{
 	public void pickUpObject(int index) {
 		
 		if(index != 999) {
-			String text = "";
-			if(inventory.size() != maxInventorySize) {
-				inventory.add(gp.obj[index]);
-				gp.playSE(1);
-				text = "Got a " + gp.obj[index].name + "!";
+			//PICK UP ONLY ITEMS
+			if(gp.obj[index].type == type_pickupOnly) {
+				gp.obj[index].use(this);
 				gp.obj[index] = null;
-			}else {
-				text = "You cannot carry anymore!";
 			}
-			gp.ui.addMessage(text);
+			
+			//INVENTORY ITEMS
+			else {
+				String text = "";
+				if(inventory.size() != maxInventorySize) {
+					inventory.add(gp.obj[index]);
+					gp.playSE(1);
+					text = "Got a " + gp.obj[index].name + "!";
+					gp.obj[index] = null;
+				}else {
+					text = "You cannot carry anymore!";
+				}
+				gp.ui.addMessage(text);
+			}
 		}
 		
 	}

@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -65,6 +66,7 @@ public class Entity {
 	public ProjectTile projecttile;
 	
 	//ITEM ATTIBUTES
+	public int value;
 	public int attackValue;
 	public int defenseValue;
 	public String description = "";
@@ -79,6 +81,7 @@ public class Entity {
 	public final int type_Axe = 4;
 	public final int type_Shield = 5;
 	public final int type_Consumable = 6;
+	public final int type_pickupOnly = 7;
 	
 	public Entity(GamePanel gp) {
 		this.gp = gp;
@@ -113,6 +116,19 @@ public class Entity {
 	}
 	public void use(Entity entity) {
 		
+	}
+	public void checkDrop() {
+		
+	}
+	public void dropItem(Entity droppedItem) {
+		for(int i = 0; i < gp.obj.length; i++) {
+			if(gp.obj[i]==null) {
+				gp.obj[i] = droppedItem;
+				gp.obj[i].worldX = worldX;
+				gp.obj[i].worldY = worldY;
+				break;
+			}
+		}
 	}
 	public void update() {
 		setAction();
@@ -221,6 +237,22 @@ public class Entity {
 						image = right2;
 					}
 					break;
+			}
+			
+			//NPC Name
+			if(type == 1) {
+				
+				g2.setFont(g2.getFont().deriveFont(Font.BOLD, 16F));
+				
+				int length = (int)g2.getFontMetrics().getStringBounds(name, g2).getWidth();
+				int x = screenX-length/2 + gp.tileSize/2;
+				
+				g2.setColor(Color.white);
+				g2.drawString(name, x-1, screenY-10);
+				
+				g2.setColor(Color.black);
+				g2.drawString(name, x, screenY-11);
+	
 			}
 			
 			//Monster HP bar

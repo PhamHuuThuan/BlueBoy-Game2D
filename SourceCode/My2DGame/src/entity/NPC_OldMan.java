@@ -13,6 +13,7 @@ public class NPC_OldMan extends Entity{
 	public NPC_OldMan(GamePanel gp) {
 		super(gp);
 		
+		name = "OLD MAN";
 		type = type_Npc;
 		direction = "down";
 		speed = 1;
