@@ -79,6 +79,23 @@ public class MON_GreenSlime extends Entity{
 		actionLockCounter = 0;
 		direction = gp.player.direction;
 	}
+	public void checkManyDrop() {
+		
+		//CAST A DIE
+		int i = new Random().nextInt(100)+1;
+		
+		//SET THE MONSTER DROP
+		if(i < 50) {
+			checkDrop();
+			checkDrop();
+		}else if(i < 75) {
+			checkDrop();
+		}else if(i < 100) {
+			checkDrop();
+			checkDrop();
+			checkDrop();
+		}
+	}
 	public void checkDrop() {
 		
 		//CAST A DIE
