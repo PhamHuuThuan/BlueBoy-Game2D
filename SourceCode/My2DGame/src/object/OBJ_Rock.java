@@ -1,5 +1,7 @@
 package object;
 
+import java.awt.Color;
+
 import entity.Entity;
 import entity.ProjectTile;
 import main.GamePanel;
@@ -39,5 +41,21 @@ public class OBJ_Rock extends ProjectTile{
 	}
 	public void subtractResource(Entity user) {
 		user.ammo -= useCost;
+	}
+	public Color getParticleColor() {
+		Color color = new Color(40, 50, 0);
+		return color;
+	}
+	public int getParticleSize() {
+		int size = 10; // 12 pixels
+		return size;
+	}
+	public int getPraticleSpeed() {
+		int speed = 1;
+		return speed;
+	}
+	public int getPraticleMaxLife() {
+		int maxLife = 20;
+		return maxLife;
 	}
 }

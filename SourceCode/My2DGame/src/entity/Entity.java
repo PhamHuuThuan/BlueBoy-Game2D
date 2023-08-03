@@ -169,8 +169,17 @@ public class Entity {
 		int speed = generator.getPraticleSpeed();
 		int maxLife = generator.getPraticleMaxLife();
 		
-		Particle pl = new Particle(gp, generator, color, size, speed, maxLife, -1, -1);
-		gp.particleList.add(pl);
+		Particle p1 = new Particle(gp, generator, color, size, speed, maxLife, -2, -1);
+		gp.particleList.add(p1);
+		
+		Particle p2 = new Particle(gp, generator, color, size, speed, maxLife, 2, -1);
+		gp.particleList.add(p2);
+		
+		Particle p3 = new Particle(gp, generator, color, size, speed, maxLife, -2, 1);
+		gp.particleList.add(p3);
+		
+		Particle p4 = new Particle(gp, generator, color, size, speed, maxLife, 2, 1);
+		gp.particleList.add(p4);
 	}
 	public void update() {
 		setAction();
