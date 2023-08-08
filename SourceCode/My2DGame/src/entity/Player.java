@@ -376,6 +376,9 @@ public class Player extends Entity{
 			
 			if(gp.iTile[i].life == 0)
 				gp.iTile[i] = gp.iTile[i].getDestroyedForm();
+		}else if(i != 999 && gp.iTile[i].destructible == true && gp.iTile[i].isCorrectItem(this) == false && gp.iTile[i].invincible == false) {
+			gp.iTile[i].invincible = true;
+			gp.ui.addMessage("Can't cutting tree! You have to use Axe!");
 		}
 	}
 	public void checkLevelUp() {
