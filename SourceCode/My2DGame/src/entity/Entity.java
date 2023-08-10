@@ -126,22 +126,22 @@ public class Entity {
 	}
 	public void dropItem(Entity droppedItem) {
 		
-		for(int i = 0; i < gp.obj.length; i++) {
-			if(gp.obj[i]==null) {
-				gp.obj[i] = droppedItem;
+		for(int i = 0; i < gp.obj[gp.currentMap].length; i++) {
+			if(gp.obj[gp.currentMap][i]==null) {
+				gp.obj[gp.currentMap][i] = (Entity) droppedItem;
 				if(i%4==0) {
-					gp.obj[i].worldX = worldX - new Random().nextInt(75) + new Random().nextInt(20);
-					gp.obj[i].worldY = worldY + new Random().nextInt(60);;
+					gp.obj[gp.currentMap][i].worldX = worldX - new Random().nextInt(75) + new Random().nextInt(20);
+					gp.obj[gp.currentMap][i].worldY = worldY + new Random().nextInt(60);;
 				}
 				else if(i%4==1){
-					gp.obj[i].worldX = worldX - new Random().nextInt(60);
-					gp.obj[i].worldY = worldY - new Random().nextInt(75) + new Random().nextInt(20);
+					gp.obj[gp.currentMap][i].worldX = worldX - new Random().nextInt(60);
+					gp.obj[gp.currentMap][i].worldY = worldY - new Random().nextInt(75) + new Random().nextInt(20);
 				}else if(i%4==2){
-					gp.obj[i].worldX = worldX + new Random().nextInt(60);
-					gp.obj[i].worldY = worldY + new Random().nextInt(75) - new Random().nextInt(20);
+					gp.obj[gp.currentMap][i].worldX = worldX + new Random().nextInt(60);
+					gp.obj[gp.currentMap][i].worldY = worldY + new Random().nextInt(75) - new Random().nextInt(20);
 				}else{
-					gp.obj[i].worldX = worldX + new Random().nextInt(60);
-					gp.obj[i].worldY = worldY + new Random().nextInt(75) - new Random().nextInt(20);
+					gp.obj[gp.currentMap][i].worldX = worldX + new Random().nextInt(60);
+					gp.obj[gp.currentMap][i].worldY = worldY + new Random().nextInt(75) - new Random().nextInt(20);
 				}
 				break;
 			}
@@ -187,9 +187,9 @@ public class Entity {
 		collisonOn = false;
 		gp.cChecker.checkTile(this);
 		gp.cChecker.checkObject(this, false);
-		gp.cChecker.checkEntity(this, gp.npc);
-		gp.cChecker.checkEntity(this, gp.monster);
-		gp.cChecker.checkEntity(this, gp.iTile);
+		gp.cChecker.checkEntity(this, gp.npc[gp.currentMap]);
+		gp.cChecker.checkEntity(this, gp.monster[gp.currentMap]);
+		gp.cChecker.checkEntity(this, gp.iTile[gp.currentMap]);
 		boolean contactPlayer = gp.cChecker.checkPlayer(this);
 		
 		if(this.type == type_Monster && contactPlayer == true) {

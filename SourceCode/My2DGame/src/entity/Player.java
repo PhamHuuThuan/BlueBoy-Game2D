@@ -54,6 +54,8 @@ public class Player extends Entity{
 	public void setDefaultValues() {
 		worldX = gp.tileSize*23;
 		worldY = gp.tileSize*21;
+//		worldX = gp.tileSize*12;
+//		worldY = gp.tileSize*13;
 		speed = 4;
 		direction = "down";
 		type = type_Player;
@@ -75,7 +77,20 @@ public class Player extends Entity{
 		attack = getAttack();	//The total attackValue is decided by strength and weapon
 		defense = getDefense();	//The total defense is decided by dexterity and shield
 	}
+	public void setDefaultPosition() {
+		worldX = gp.tileSize*23;
+		worldY = gp.tileSize*21;
+		
+		direction = "down";
+	}
+	public void restoreLifeAndMana() {
+		life = maxLife;
+		mana = maxMana;
+		invincible = false;
+	}
 	public void setItems() {
+		
+		inventory.clear();
 		inventory.add(currentWeapon);
 		inventory.add(currentShield);
 	}
@@ -150,15 +165,15 @@ public class Player extends Entity{
 			pickUpObject(objIndex);
 			
 			//CHECK NPC COLLISION
-			int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+			int npcIndex = gp.cChecker.checkEntity(this, gp.npc[gp.currentMap]);
 			interactNPC(npcIndex);
 			
 			//CHECK MONSTER COLLISION
-			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster[gp.currentMap]);
 			contactMonster(monsterIndex);
 			
 			//CHECK INTERACTIVE TILE COLLISION
-			int iTile = gp.cChecker.checkEntity(this, gp.iTile);
+			int iTile = gp.cChecker.checkEntity(this, gp.iTile[gp.currentMap]);
 			
 			
 			//CHECK EVENT
@@ -237,6 +252,15 @@ public class Player extends Entity{
 		if(life>maxLife) {
 			life = maxLife;
 		}
+		if(mana > maxMana) {
+			mana = maxMana;
+		}
+		if(life <= 0) {
+			gp.gameState = gp.gameOverState;
+			gp.ui.commandNum = -1;
+			gp.stopMusic();
+			gp.playSE(12);
+		}
 	}
 	public void attacking() {
 		spriteCounter++;
@@ -266,10 +290,10 @@ public class Player extends Entity{
 			solidArea.height = attackArea.height;
 			
 			//check monster collision with the update worldX, worldY and solidArea
-			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster[gp.currentMap]);
 			damageMonster(monsterIndex, attack);
 			
-			int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+			int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile[gp.currentMap]);
 			damageInteractiveTile(iTileIndex);
 			
 			//after checking collision, restore the original data
@@ -288,19 +312,19 @@ public class Player extends Entity{
 		
 		if(index != 999) {
 			//PICK UP ONLY ITEMS
-			if(gp.obj[index].type == type_pickupOnly) {
-				gp.obj[index].use(this);
-				gp.obj[index] = null;
+			if(gp.obj[gp.currentMap][index].type == type_pickupOnly) {
+				gp.obj[gp.currentMap][index].use(this);
+				gp.obj[gp.currentMap][index] = null;
 			}
 			
 			//INVENTORY ITEMS
 			else {
 				String text = "";
 				if(inventory.size() != maxInventorySize) {
-					inventory.add(gp.obj[index]);
+					inventory.add(gp.obj[gp.currentMap][index]);
 					gp.playSE(1);
-					text = "Got a " + gp.obj[index].name + "!";
-					gp.obj[index] = null;
+					text = "Got a " + gp.obj[gp.currentMap][index].name + "!";
+					gp.obj[gp.currentMap][index] = null;
 				}else {
 					text = "You cannot carry anymore!";
 				}
@@ -315,15 +339,15 @@ public class Player extends Entity{
 			if(i != 999) {
 				attackCanceled = true;
 				gp.gameState = gp.dialogueState;
-				gp.npc[i].speak();
+				gp.npc[gp.currentMap][i].speak();
 			}
 		}
 	}
 	public void contactMonster(int i) {
 		if(i!=999) {
-			if(invincible == false && gp.monster[i].dying == false) {
+			if(invincible == false && gp.monster[gp.currentMap][i].dying == false) {
 				gp.playSE(6);
-				int damage = gp.monster[i].attack - defense;
+				int damage = gp.monster[gp.currentMap][i].attack - defense;
 				
 				if(damage < 0) {
 					damage = 0;
@@ -337,24 +361,24 @@ public class Player extends Entity{
 	}
 	public void damageMonster(int i, int attack) {
 		if(i!=999) {
-			if(gp.monster[i].invincible == false && gp.player.life > 0) {
+			if(gp.monster[gp.currentMap][i].invincible == false && gp.player.life > 0) {
 				gp.playSE(5);
 				
-				int damage = attack - gp.monster[i].defense;
+				int damage = attack - gp.monster[gp.currentMap][i].defense;
 				
 				if(damage < 0) {
 					damage = 0;
 				}
-				gp.monster[i].life -= damage;
+				gp.monster[gp.currentMap][i].life -= damage;
 				gp.ui.addMessage(damage + " damage!");
-				gp.monster[i].invincible = true;
-				gp.monster[i].damageReaction();
+				gp.monster[gp.currentMap][i].invincible = true;
+				gp.monster[gp.currentMap][i].damageReaction();
 				
-				if(gp.monster[i].life <= 0) {
-					gp.monster[i].dying = true;
-					gp.ui.addMessage("Killed the " + gp.monster[i].name + "!");
-					exp += gp.monster[i].exp;
-					gp.ui.addMessage("+ " + gp.monster[i].exp + "Exp!");
+				if(gp.monster[gp.currentMap][i].life <= 0) {
+					gp.monster[gp.currentMap][i].dying = true;
+					gp.ui.addMessage("Killed the " + gp.monster[gp.currentMap][i].name + "!");
+					exp += gp.monster[gp.currentMap][i].exp;
+					gp.ui.addMessage("+ " + gp.monster[gp.currentMap][i].exp + "Exp!");
 					checkLevelUp();
 				}
 			}	
@@ -367,17 +391,17 @@ public class Player extends Entity{
 //		}
 	}
 	public void damageInteractiveTile(int i) {
-		if(i != 999 && gp.iTile[i].destructible == true && gp.iTile[i].isCorrectItem(this) == true && gp.iTile[i].invincible == false) {
-			gp.iTile[i].playSE();
-			gp.iTile[i].life-=1;
-			gp.iTile[i].invincible = true;
+		if(i != 999 && gp.iTile[gp.currentMap][i].destructible == true && gp.iTile[gp.currentMap][i].isCorrectItem(this) == true && gp.iTile[gp.currentMap][i].invincible == false) {
+			gp.iTile[gp.currentMap][i].playSE();
+			gp.iTile[gp.currentMap][i].life-=1;
+			gp.iTile[gp.currentMap][i].invincible = true;
 			
-			generateParticle(gp.iTile[i], gp.iTile[i]);
+			generateParticle(gp.iTile[gp.currentMap][i], gp.iTile[gp.currentMap][i]);
 			
-			if(gp.iTile[i].life == 0)
-				gp.iTile[i] = gp.iTile[i].getDestroyedForm();
-		}else if(i != 999 && gp.iTile[i].destructible == true && gp.iTile[i].isCorrectItem(this) == false && gp.iTile[i].invincible == false) {
-			gp.iTile[i].invincible = true;
+			if(gp.iTile[gp.currentMap][i].life == 0)
+				gp.iTile[gp.currentMap][i] = gp.iTile[gp.currentMap][i].getDestroyedForm();
+		}else if(i != 999 && gp.iTile[gp.currentMap][i].destructible == true && gp.iTile[gp.currentMap][i].isCorrectItem(this) == false && gp.iTile[gp.currentMap][i].invincible == false) {
+			gp.iTile[gp.currentMap][i].invincible = true;
 			gp.ui.addMessage("Can't cutting tree! You have to use Axe!");
 		}
 	}

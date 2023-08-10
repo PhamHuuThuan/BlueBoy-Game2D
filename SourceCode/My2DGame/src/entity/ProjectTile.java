@@ -21,10 +21,10 @@ public class ProjectTile extends Entity{
 	public void update() {
 		
 		if(user == gp.player) {
-			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster[gp.currentMap]);
 			if(monsterIndex != 999) {
 				gp.player.damageMonster(monsterIndex, attack);
-				generateParticle(user.projecttile, gp.monster[monsterIndex]);
+				generateParticle(user.projecttile, gp.monster[gp.currentMap][monsterIndex]);
 				alive = false;
 			}
 		}
